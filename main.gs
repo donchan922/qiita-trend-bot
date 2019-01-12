@@ -22,7 +22,7 @@ function postQiitaNewTrends() {
     var uuid = items[i].match(/uuid&quot;:&quot;(.+?)&quot;,/)[1]
     var urlName = items[i].match(/urlName&quot;:&quot;(.+?)&quot;/)[1]
     var link = QIITA_BASE_URL + '/' + urlName + '/items/' + uuid
-    var status = title + "\n" + link
+    var status = unEscapeHTML(title) + " " + link
     // Tweetする
     tweet(status)
   }
@@ -40,4 +40,12 @@ function tweet(status) {
     // それ以外のエラーはログ出力する
     console.error(e)
   }
+}
+
+var unEscapeHTML = function (str) {
+  return str.replace(/(&lt;)/g, '<')
+            .replace(/(&gt;)/g, '>')
+            .replace(/(&quot;)/g, '"')
+            .replace(/(&#39;)/g, "'")
+            .replace(/(&amp;)/g, '&')
 }

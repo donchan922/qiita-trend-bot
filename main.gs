@@ -24,7 +24,7 @@ function postQiitaNewTrends() {
     var link = QIITA_BASE_URL + '/' + urlName + '/items/' + uuid
     var status = unEscapeHTML(title) + " " + link
     // Tweetする
-    tweet(status)
+    tweet(decodeURIComponent(status))
   }
 }
 

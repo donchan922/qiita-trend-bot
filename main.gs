@@ -48,4 +48,5 @@ var unEscapeHTML = function (str) {
             .replace(/(&quot;)/g, '"')
             .replace(/(&#39;)/g, "'")
             .replace(/(&amp;)/g, '&')
+            .replace(/(\\u0026)/g, '&')
 }

@@ -1,6 +1,5 @@
 // QiitaのURL情報
-var QIITA_BASE_URL = 'https://qiita.com'
-var QIITA_TRENDS_URL = 'https://qiita.com/trend'
+var QIITA_URL = 'https://qiita.com'
 
 // Twitter認証処理
 var twitter = TwitterApp.create()
@@ -10,19 +9,18 @@ function authCallback(request) { return twitter.authCallback(request) }
 
 // Qiitaトレンド新着記事投稿処理
 function postQiitaNewTrends() {
-  var html = UrlFetchApp.fetch(QIITA_TRENDS_URL).getContentText()
-  var items = Parser.data(html).from('{&quot;followingLikers').to('}}}').iterate()
-  for (var i = 0; i < items.length; i++) {
-    var isNewArrival = items[i].match(/isNewArrival&quot;:(.+?),/)[1]
+  var html = UrlFetchApp.fetch(QIITA_URL).getContentText()
+  var isNewArrivals = Parser.data(html).from('"isNewArrival":').to(',').iterate()
+  var items = Parser.data(html).from('"node":').to('}}').iterate()
+
+  for (var i = 0; i < isNewArrivals.length; i++) {
     // 新着（newアイコン表示）記事のみ対象とする
-    if (isNewArrival == 'false') {
+    if (isNewArrivals[i] == 'false') {
       continue
     }
-    var title = items[i].match(/title&quot;:&quot;(.+?)&quot;,/)[1]
-    var uuid = items[i].match(/uuid&quot;:&quot;(.+?)&quot;,/)[1]
-    var urlName = items[i].match(/urlName&quot;:&quot;(.+?)&quot;/)[1]
-    var link = QIITA_BASE_URL + '/' + urlName + '/items/' + uuid
-    var status = unEscapeHTML(title) + " " + link
+    var title = items[i].match(/"title":"(.+?)",/)[1]
+    var linkUrl = items[i].match(/"linkUrl":"(.+?)",/)[1]
+    var status = unEscapeHTML(title) + " " + linkUrl
     // Tweetする
     tweet(decodeURIComponent(status))
   }

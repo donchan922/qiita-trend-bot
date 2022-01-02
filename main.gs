@@ -36,7 +36,7 @@ function tweet(status) {
       return
     }
     // それ以外のエラーはログ出力する
-    console.error(e)
+    Logger.log(e.message);
   }
 }
 

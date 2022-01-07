@@ -18,6 +18,9 @@ function postQiitaNewTrends() {
     if (isNewArrivals[i] == 'false') {
       continue
     }
+    if (items[i].match(/"title":"(.+?)",/) === null || items[i].match(/"linkUrl":"(.+?)",/) === null) {
+      continue
+    }
     var title = items[i].match(/"title":"(.+?)",/)[1]
     var linkUrl = items[i].match(/"linkUrl":"(.+?)",/)[1]
     var status = unEscapeHTML(title) + " " + linkUrl
